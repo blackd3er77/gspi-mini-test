@@ -1,0 +1,1059 @@
+{
+  "meta": {
+    "title": "GSPI Mini Test Bank",
+    "question_count": 150,
+    "description": "Auto-generated sample numeric question bank for the GSPI-style mini web app."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "category": "salt_concentration",
+      "question": "When 40g of salt water with a 2.0% concentration of salt is mixed with 10g of salt water with a 3.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "2.2",
+      "unit": "%"
+    },
+    {
+      "id": 2,
+      "category": "salt_concentration",
+      "question": "When 15g of salt water with a 2.5% concentration of salt is mixed with 15g of salt water with a 2.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "2.25",
+      "unit": "%"
+    },
+    {
+      "id": 3,
+      "category": "salt_concentration",
+      "question": "When 40g of salt water with a 4.5% concentration of salt is mixed with 40g of salt water with a 2.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "3.25",
+      "unit": "%"
+    },
+    {
+      "id": 4,
+      "category": "salt_concentration",
+      "question": "When 30g of salt water with a 2.0% concentration of salt is mixed with 25g of salt water with a 1.5% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "1.77",
+      "unit": "%"
+    },
+    {
+      "id": 5,
+      "category": "salt_concentration",
+      "question": "When 10g of salt water with a 3.0% concentration of salt is mixed with 15g of salt water with a 4.5% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "3.9",
+      "unit": "%"
+    },
+    {
+      "id": 6,
+      "category": "salt_concentration",
+      "question": "When 30g of salt water with a 4.5% concentration of salt is mixed with 10g of salt water with a 2.8% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "4.08",
+      "unit": "%"
+    },
+    {
+      "id": 7,
+      "category": "salt_concentration",
+      "question": "When 40g of salt water with a 4.5% concentration of salt is mixed with 40g of salt water with a 4.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "4.25",
+      "unit": "%"
+    },
+    {
+      "id": 8,
+      "category": "salt_concentration",
+      "question": "When 15g of salt water with a 5.0% concentration of salt is mixed with 25g of salt water with a 3.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "3.75",
+      "unit": "%"
+    },
+    {
+      "id": 9,
+      "category": "salt_concentration",
+      "question": "When 50g of salt water with a 2.0% concentration of salt is mixed with 50g of salt water with a 2.4% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "2.2",
+      "unit": "%"
+    },
+    {
+      "id": 10,
+      "category": "salt_concentration",
+      "question": "When 40g of salt water with a 3.5% concentration of salt is mixed with 25g of salt water with a 3.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "3.31",
+      "unit": "%"
+    },
+    {
+      "id": 11,
+      "category": "salt_concentration",
+      "question": "When 15g of salt water with a 3.5% concentration of salt is mixed with 15g of salt water with a 2.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "2.75",
+      "unit": "%"
+    },
+    {
+      "id": 12,
+      "category": "salt_concentration",
+      "question": "When 10g of salt water with a 2.4% concentration of salt is mixed with 25g of salt water with a 3.5% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "3.19",
+      "unit": "%"
+    },
+    {
+      "id": 13,
+      "category": "salt_concentration",
+      "question": "When 50g of salt water with a 5.0% concentration of salt is mixed with 20g of salt water with a 3.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "4.43",
+      "unit": "%"
+    },
+    {
+      "id": 14,
+      "category": "salt_concentration",
+      "question": "When 50g of salt water with a 4.0% concentration of salt is mixed with 10g of salt water with a 4.5% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "4.08",
+      "unit": "%"
+    },
+    {
+      "id": 15,
+      "category": "salt_concentration",
+      "question": "When 10g of salt water with a 2.4% concentration of salt is mixed with 25g of salt water with a 4.5% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "3.9",
+      "unit": "%"
+    },
+    {
+      "id": 16,
+      "category": "salt_concentration",
+      "question": "When 20g of salt water with a 5.0% concentration of salt is mixed with 50g of salt water with a 3.5% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "3.93",
+      "unit": "%"
+    },
+    {
+      "id": 17,
+      "category": "salt_concentration",
+      "question": "When 30g of salt water with a 2.4% concentration of salt is mixed with 15g of salt water with a 1.5% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "2.1",
+      "unit": "%"
+    },
+    {
+      "id": 18,
+      "category": "salt_concentration",
+      "question": "When 40g of salt water with a 3.2% concentration of salt is mixed with 15g of salt water with a 2.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "2.87",
+      "unit": "%"
+    },
+    {
+      "id": 19,
+      "category": "salt_concentration",
+      "question": "When 50g of salt water with a 2.4% concentration of salt is mixed with 15g of salt water with a 4.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "2.77",
+      "unit": "%"
+    },
+    {
+      "id": 20,
+      "category": "salt_concentration",
+      "question": "When 20g of salt water with a 3.5% concentration of salt is mixed with 25g of salt water with a 2.4% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "2.89",
+      "unit": "%"
+    },
+    {
+      "id": 21,
+      "category": "salt_concentration",
+      "question": "When 20g of salt water with a 3.0% concentration of salt is mixed with 20g of salt water with a 3.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "3",
+      "unit": "%"
+    },
+    {
+      "id": 22,
+      "category": "salt_concentration",
+      "question": "When 40g of salt water with a 2.4% concentration of salt is mixed with 40g of salt water with a 5.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "3.7",
+      "unit": "%"
+    },
+    {
+      "id": 23,
+      "category": "salt_concentration",
+      "question": "When 40g of salt water with a 4.5% concentration of salt is mixed with 15g of salt water with a 2.8% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "4.04",
+      "unit": "%"
+    },
+    {
+      "id": 24,
+      "category": "salt_concentration",
+      "question": "When 15g of salt water with a 3.6% concentration of salt is mixed with 25g of salt water with a 3.0% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "3.23",
+      "unit": "%"
+    },
+    {
+      "id": 25,
+      "category": "salt_concentration",
+      "question": "When 40g of salt water with a 4.5% concentration of salt is mixed with 40g of salt water with a 2.8% concentration of salt, what is the percentage of the concentration of salt in the resulting mixed solution?",
+      "answer": "3.65",
+      "unit": "%"
+    },
+    {
+      "id": 26,
+      "category": "discount_tax",
+      "question": "An item costs 2500 yen. After a discount of 5% and then sales tax of 8% is added, what is the final price in yen?",
+      "answer": "2565",
+      "unit": "yen"
+    },
+    {
+      "id": 27,
+      "category": "discount_tax",
+      "question": "An item costs 1200 yen. After a discount of 15% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "1122",
+      "unit": "yen"
+    },
+    {
+      "id": 28,
+      "category": "discount_tax",
+      "question": "An item costs 2400 yen. After a discount of 5% and then sales tax of 8% is added, what is the final price in yen?",
+      "answer": "2462.4",
+      "unit": "yen"
+    },
+    {
+      "id": 29,
+      "category": "discount_tax",
+      "question": "An item costs 4800 yen. After a discount of 30% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "3696",
+      "unit": "yen"
+    },
+    {
+      "id": 30,
+      "category": "discount_tax",
+      "question": "An item costs 2000 yen. After a discount of 30% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "1540",
+      "unit": "yen"
+    },
+    {
+      "id": 31,
+      "category": "discount_tax",
+      "question": "An item costs 3000 yen. After a discount of 30% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "2310",
+      "unit": "yen"
+    },
+    {
+      "id": 32,
+      "category": "discount_tax",
+      "question": "An item costs 1800 yen. After a discount of 15% and then sales tax of 8% is added, what is the final price in yen?",
+      "answer": "1652.4",
+      "unit": "yen"
+    },
+    {
+      "id": 33,
+      "category": "discount_tax",
+      "question": "An item costs 2000 yen. After a discount of 30% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "1540",
+      "unit": "yen"
+    },
+    {
+      "id": 34,
+      "category": "discount_tax",
+      "question": "An item costs 4800 yen. After a discount of 20% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "4224",
+      "unit": "yen"
+    },
+    {
+      "id": 35,
+      "category": "discount_tax",
+      "question": "An item costs 2500 yen. After a discount of 10% and then sales tax of 8% is added, what is the final price in yen?",
+      "answer": "2430",
+      "unit": "yen"
+    },
+    {
+      "id": 36,
+      "category": "discount_tax",
+      "question": "An item costs 4200 yen. After a discount of 20% and then sales tax of 8% is added, what is the final price in yen?",
+      "answer": "3628.8",
+      "unit": "yen"
+    },
+    {
+      "id": 37,
+      "category": "discount_tax",
+      "question": "An item costs 1200 yen. After a discount of 5% and then sales tax of 8% is added, what is the final price in yen?",
+      "answer": "1231.2",
+      "unit": "yen"
+    },
+    {
+      "id": 38,
+      "category": "discount_tax",
+      "question": "An item costs 1800 yen. After a discount of 30% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "1386",
+      "unit": "yen"
+    },
+    {
+      "id": 39,
+      "category": "discount_tax",
+      "question": "An item costs 4800 yen. After a discount of 5% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "5016",
+      "unit": "yen"
+    },
+    {
+      "id": 40,
+      "category": "discount_tax",
+      "question": "An item costs 3000 yen. After a discount of 25% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "2475",
+      "unit": "yen"
+    },
+    {
+      "id": 41,
+      "category": "discount_tax",
+      "question": "An item costs 4200 yen. After a discount of 15% and then sales tax of 8% is added, what is the final price in yen?",
+      "answer": "3855.6",
+      "unit": "yen"
+    },
+    {
+      "id": 42,
+      "category": "discount_tax",
+      "question": "An item costs 1500 yen. After a discount of 30% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "1155",
+      "unit": "yen"
+    },
+    {
+      "id": 43,
+      "category": "discount_tax",
+      "question": "An item costs 2500 yen. After a discount of 5% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "2612.5",
+      "unit": "yen"
+    },
+    {
+      "id": 44,
+      "category": "discount_tax",
+      "question": "An item costs 3000 yen. After a discount of 10% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "2970",
+      "unit": "yen"
+    },
+    {
+      "id": 45,
+      "category": "discount_tax",
+      "question": "An item costs 1200 yen. After a discount of 30% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "924",
+      "unit": "yen"
+    },
+    {
+      "id": 46,
+      "category": "discount_tax",
+      "question": "An item costs 4200 yen. After a discount of 10% and then sales tax of 8% is added, what is the final price in yen?",
+      "answer": "4082.4",
+      "unit": "yen"
+    },
+    {
+      "id": 47,
+      "category": "discount_tax",
+      "question": "An item costs 2400 yen. After a discount of 30% and then sales tax of 8% is added, what is the final price in yen?",
+      "answer": "1814.4",
+      "unit": "yen"
+    },
+    {
+      "id": 48,
+      "category": "discount_tax",
+      "question": "An item costs 1800 yen. After a discount of 15% and then sales tax of 8% is added, what is the final price in yen?",
+      "answer": "1652.4",
+      "unit": "yen"
+    },
+    {
+      "id": 49,
+      "category": "discount_tax",
+      "question": "An item costs 4200 yen. After a discount of 25% and then sales tax of 8% is added, what is the final price in yen?",
+      "answer": "3402",
+      "unit": "yen"
+    },
+    {
+      "id": 50,
+      "category": "discount_tax",
+      "question": "An item costs 4800 yen. After a discount of 15% and then sales tax of 10% is added, what is the final price in yen?",
+      "answer": "4488",
+      "unit": "yen"
+    },
+    {
+      "id": 51,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 4 days, and Worker B can finish the same job in 5 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "2.22",
+      "unit": "days"
+    },
+    {
+      "id": 52,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 6 days, and Worker B can finish the same job in 15 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "4.29",
+      "unit": "days"
+    },
+    {
+      "id": 53,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 6 days, and Worker B can finish the same job in 6 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "3",
+      "unit": "days"
+    },
+    {
+      "id": 54,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 4 days, and Worker B can finish the same job in 6 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "2.4",
+      "unit": "days"
+    },
+    {
+      "id": 55,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 10 days, and Worker B can finish the same job in 5 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "3.33",
+      "unit": "days"
+    },
+    {
+      "id": 56,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 4 days, and Worker B can finish the same job in 12 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "3",
+      "unit": "days"
+    },
+    {
+      "id": 57,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 8 days, and Worker B can finish the same job in 15 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "5.22",
+      "unit": "days"
+    },
+    {
+      "id": 58,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 4 days, and Worker B can finish the same job in 15 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "3.16",
+      "unit": "days"
+    },
+    {
+      "id": 59,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 10 days, and Worker B can finish the same job in 15 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "6",
+      "unit": "days"
+    },
+    {
+      "id": 60,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 5 days, and Worker B can finish the same job in 6 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "2.73",
+      "unit": "days"
+    },
+    {
+      "id": 61,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 12 days, and Worker B can finish the same job in 9 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "5.14",
+      "unit": "days"
+    },
+    {
+      "id": 62,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 10 days, and Worker B can finish the same job in 6 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "3.75",
+      "unit": "days"
+    },
+    {
+      "id": 63,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 6 days, and Worker B can finish the same job in 10 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "3.75",
+      "unit": "days"
+    },
+    {
+      "id": 64,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 10 days, and Worker B can finish the same job in 9 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "4.74",
+      "unit": "days"
+    },
+    {
+      "id": 65,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 5 days, and Worker B can finish the same job in 10 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "3.33",
+      "unit": "days"
+    },
+    {
+      "id": 66,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 12 days, and Worker B can finish the same job in 12 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "6",
+      "unit": "days"
+    },
+    {
+      "id": 67,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 5 days, and Worker B can finish the same job in 12 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "3.53",
+      "unit": "days"
+    },
+    {
+      "id": 68,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 6 days, and Worker B can finish the same job in 9 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "3.6",
+      "unit": "days"
+    },
+    {
+      "id": 69,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 12 days, and Worker B can finish the same job in 12 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "6",
+      "unit": "days"
+    },
+    {
+      "id": 70,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 6 days, and Worker B can finish the same job in 9 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "3.6",
+      "unit": "days"
+    },
+    {
+      "id": 71,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 10 days, and Worker B can finish the same job in 9 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "4.74",
+      "unit": "days"
+    },
+    {
+      "id": 72,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 4 days, and Worker B can finish the same job in 6 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "2.4",
+      "unit": "days"
+    },
+    {
+      "id": 73,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 5 days, and Worker B can finish the same job in 5 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "2.5",
+      "unit": "days"
+    },
+    {
+      "id": 74,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 6 days, and Worker B can finish the same job in 5 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "2.73",
+      "unit": "days"
+    },
+    {
+      "id": 75,
+      "category": "work_rate",
+      "question": "Worker A can finish a job in 10 days, and Worker B can finish the same job in 10 days. If they work together at the same constant pace, how many days will they need to finish the job?",
+      "answer": "5",
+      "unit": "days"
+    },
+    {
+      "id": 76,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 40 km/h for 25 minutes. How many kilometers does it travel?",
+      "answer": "16.67",
+      "unit": "km"
+    },
+    {
+      "id": 77,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 36 km/h for 20 minutes. How many kilometers does it travel?",
+      "answer": "12",
+      "unit": "km"
+    },
+    {
+      "id": 78,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 60 km/h for 15 minutes. How many kilometers does it travel?",
+      "answer": "15",
+      "unit": "km"
+    },
+    {
+      "id": 79,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 40 km/h for 20 minutes. How many kilometers does it travel?",
+      "answer": "13.33",
+      "unit": "km"
+    },
+    {
+      "id": 80,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 36 km/h for 36 minutes. How many kilometers does it travel?",
+      "answer": "21.6",
+      "unit": "km"
+    },
+    {
+      "id": 81,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 36 km/h for 50 minutes. How many kilometers does it travel?",
+      "answer": "30",
+      "unit": "km"
+    },
+    {
+      "id": 82,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 40 km/h for 30 minutes. How many kilometers does it travel?",
+      "answer": "20",
+      "unit": "km"
+    },
+    {
+      "id": 83,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 60 km/h for 45 minutes. How many kilometers does it travel?",
+      "answer": "45",
+      "unit": "km"
+    },
+    {
+      "id": 84,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 40 km/h for 50 minutes. How many kilometers does it travel?",
+      "answer": "33.33",
+      "unit": "km"
+    },
+    {
+      "id": 85,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 40 km/h for 45 minutes. How many kilometers does it travel?",
+      "answer": "30",
+      "unit": "km"
+    },
+    {
+      "id": 86,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 40 km/h for 45 minutes. How many kilometers does it travel?",
+      "answer": "30",
+      "unit": "km"
+    },
+    {
+      "id": 87,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 72 km/h for 40 minutes. How many kilometers does it travel?",
+      "answer": "48",
+      "unit": "km"
+    },
+    {
+      "id": 88,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 40 km/h for 20 minutes. How many kilometers does it travel?",
+      "answer": "13.33",
+      "unit": "km"
+    },
+    {
+      "id": 89,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 36 km/h for 40 minutes. How many kilometers does it travel?",
+      "answer": "24",
+      "unit": "km"
+    },
+    {
+      "id": 90,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 45 km/h for 40 minutes. How many kilometers does it travel?",
+      "answer": "30",
+      "unit": "km"
+    },
+    {
+      "id": 91,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 48 km/h for 45 minutes. How many kilometers does it travel?",
+      "answer": "36",
+      "unit": "km"
+    },
+    {
+      "id": 92,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 72 km/h for 15 minutes. How many kilometers does it travel?",
+      "answer": "18",
+      "unit": "km"
+    },
+    {
+      "id": 93,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 60 km/h for 20 minutes. How many kilometers does it travel?",
+      "answer": "20",
+      "unit": "km"
+    },
+    {
+      "id": 94,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 36 km/h for 40 minutes. How many kilometers does it travel?",
+      "answer": "24",
+      "unit": "km"
+    },
+    {
+      "id": 95,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 60 km/h for 36 minutes. How many kilometers does it travel?",
+      "answer": "36",
+      "unit": "km"
+    },
+    {
+      "id": 96,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 72 km/h for 20 minutes. How many kilometers does it travel?",
+      "answer": "24",
+      "unit": "km"
+    },
+    {
+      "id": 97,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 40 km/h for 25 minutes. How many kilometers does it travel?",
+      "answer": "16.67",
+      "unit": "km"
+    },
+    {
+      "id": 98,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 40 km/h for 50 minutes. How many kilometers does it travel?",
+      "answer": "33.33",
+      "unit": "km"
+    },
+    {
+      "id": 99,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 48 km/h for 24 minutes. How many kilometers does it travel?",
+      "answer": "19.2",
+      "unit": "km"
+    },
+    {
+      "id": 100,
+      "category": "speed_distance",
+      "question": "A car travels at a constant speed of 48 km/h for 24 minutes. How many kilometers does it travel?",
+      "answer": "19.2",
+      "unit": "km"
+    },
+    {
+      "id": 101,
+      "category": "average",
+      "question": "The test scores of 5 students are 78, 68, 62, 78, 80. What is the average score?",
+      "answer": "73.2",
+      "unit": "points"
+    },
+    {
+      "id": 102,
+      "category": "average",
+      "question": "The test scores of 4 students are 58, 88, 80, 58. What is the average score?",
+      "answer": "71",
+      "unit": "points"
+    },
+    {
+      "id": 103,
+      "category": "average",
+      "question": "The test scores of 4 students are 68, 64, 75, 78. What is the average score?",
+      "answer": "71.25",
+      "unit": "points"
+    },
+    {
+      "id": 104,
+      "category": "average",
+      "question": "The test scores of 5 students are 68, 75, 58, 64, 75. What is the average score?",
+      "answer": "68",
+      "unit": "points"
+    },
+    {
+      "id": 105,
+      "category": "average",
+      "question": "The test scores of 4 students are 75, 70, 78, 70. What is the average score?",
+      "answer": "73.25",
+      "unit": "points"
+    },
+    {
+      "id": 106,
+      "category": "average",
+      "question": "The test scores of 5 students are 92, 92, 80, 88, 92. What is the average score?",
+      "answer": "88.8",
+      "unit": "points"
+    },
+    {
+      "id": 107,
+      "category": "average",
+      "question": "The test scores of 5 students are 64, 68, 70, 68, 58. What is the average score?",
+      "answer": "65.6",
+      "unit": "points"
+    },
+    {
+      "id": 108,
+      "category": "average",
+      "question": "The test scores of 6 students are 92, 80, 58, 92, 72, 58. What is the average score?",
+      "answer": "75.33",
+      "unit": "points"
+    },
+    {
+      "id": 109,
+      "category": "average",
+      "question": "The test scores of 4 students are 84, 78, 80, 80. What is the average score?",
+      "answer": "80.5",
+      "unit": "points"
+    },
+    {
+      "id": 110,
+      "category": "average",
+      "question": "The test scores of 4 students are 58, 80, 62, 64. What is the average score?",
+      "answer": "66",
+      "unit": "points"
+    },
+    {
+      "id": 111,
+      "category": "average",
+      "question": "The test scores of 4 students are 84, 62, 88, 68. What is the average score?",
+      "answer": "75.5",
+      "unit": "points"
+    },
+    {
+      "id": 112,
+      "category": "average",
+      "question": "The test scores of 5 students are 62, 84, 68, 84, 84. What is the average score?",
+      "answer": "76.4",
+      "unit": "points"
+    },
+    {
+      "id": 113,
+      "category": "average",
+      "question": "The test scores of 4 students are 84, 62, 75, 88. What is the average score?",
+      "answer": "77.25",
+      "unit": "points"
+    },
+    {
+      "id": 114,
+      "category": "average",
+      "question": "The test scores of 6 students are 84, 80, 72, 70, 68, 88. What is the average score?",
+      "answer": "77",
+      "unit": "points"
+    },
+    {
+      "id": 115,
+      "category": "average",
+      "question": "The test scores of 6 students are 72, 68, 70, 75, 64, 88. What is the average score?",
+      "answer": "72.83",
+      "unit": "points"
+    },
+    {
+      "id": 116,
+      "category": "average",
+      "question": "The test scores of 6 students are 70, 78, 72, 62, 58, 78. What is the average score?",
+      "answer": "69.67",
+      "unit": "points"
+    },
+    {
+      "id": 117,
+      "category": "average",
+      "question": "The test scores of 6 students are 84, 62, 62, 80, 68, 80. What is the average score?",
+      "answer": "72.67",
+      "unit": "points"
+    },
+    {
+      "id": 118,
+      "category": "average",
+      "question": "The test scores of 5 students are 64, 72, 62, 68, 72. What is the average score?",
+      "answer": "67.6",
+      "unit": "points"
+    },
+    {
+      "id": 119,
+      "category": "average",
+      "question": "The test scores of 5 students are 64, 78, 80, 92, 70. What is the average score?",
+      "answer": "76.8",
+      "unit": "points"
+    },
+    {
+      "id": 120,
+      "category": "average",
+      "question": "The test scores of 6 students are 88, 80, 58, 88, 80, 70. What is the average score?",
+      "answer": "77.33",
+      "unit": "points"
+    },
+    {
+      "id": 121,
+      "category": "average",
+      "question": "The test scores of 6 students are 62, 64, 70, 62, 62, 92. What is the average score?",
+      "answer": "68.67",
+      "unit": "points"
+    },
+    {
+      "id": 122,
+      "category": "average",
+      "question": "The test scores of 6 students are 64, 70, 70, 84, 68, 92. What is the average score?",
+      "answer": "74.67",
+      "unit": "points"
+    },
+    {
+      "id": 123,
+      "category": "average",
+      "question": "The test scores of 5 students are 68, 88, 88, 70, 80. What is the average score?",
+      "answer": "78.8",
+      "unit": "points"
+    },
+    {
+      "id": 124,
+      "category": "average",
+      "question": "The test scores of 5 students are 70, 58, 62, 88, 75. What is the average score?",
+      "answer": "70.6",
+      "unit": "points"
+    },
+    {
+      "id": 125,
+      "category": "average",
+      "question": "The test scores of 5 students are 58, 58, 72, 64, 88. What is the average score?",
+      "answer": "68",
+      "unit": "points"
+    },
+    {
+      "id": 126,
+      "category": "ratio",
+      "question": "A quantity of 108 is divided between A and B in the ratio 3:8. How much does A receive?",
+      "answer": "29.45",
+      "unit": ""
+    },
+    {
+      "id": 127,
+      "category": "ratio",
+      "question": "A quantity of 144 is divided between A and B in the ratio 6:8. How much does A receive?",
+      "answer": "61.71",
+      "unit": ""
+    },
+    {
+      "id": 128,
+      "category": "ratio",
+      "question": "A quantity of 132 is divided between A and B in the ratio 6:3. How much does A receive?",
+      "answer": "88",
+      "unit": ""
+    },
+    {
+      "id": 129,
+      "category": "ratio",
+      "question": "A quantity of 84 is divided between A and B in the ratio 2:8. How much does A receive?",
+      "answer": "16.8",
+      "unit": ""
+    },
+    {
+      "id": 130,
+      "category": "ratio",
+      "question": "A quantity of 90 is divided between A and B in the ratio 6:3. How much does A receive?",
+      "answer": "60",
+      "unit": ""
+    },
+    {
+      "id": 131,
+      "category": "ratio",
+      "question": "A quantity of 120 is divided between A and B in the ratio 6:7. How much does A receive?",
+      "answer": "55.38",
+      "unit": ""
+    },
+    {
+      "id": 132,
+      "category": "ratio",
+      "question": "A quantity of 90 is divided between A and B in the ratio 5:4. How much does A receive?",
+      "answer": "50",
+      "unit": ""
+    },
+    {
+      "id": 133,
+      "category": "ratio",
+      "question": "A quantity of 72 is divided between A and B in the ratio 4:5. How much does A receive?",
+      "answer": "32",
+      "unit": ""
+    },
+    {
+      "id": 134,
+      "category": "ratio",
+      "question": "A quantity of 72 is divided between A and B in the ratio 4:8. How much does A receive?",
+      "answer": "24",
+      "unit": ""
+    },
+    {
+      "id": 135,
+      "category": "ratio",
+      "question": "A quantity of 96 is divided between A and B in the ratio 7:3. How much does A receive?",
+      "answer": "67.2",
+      "unit": ""
+    },
+    {
+      "id": 136,
+      "category": "ratio",
+      "question": "A quantity of 120 is divided between A and B in the ratio 6:9. How much does A receive?",
+      "answer": "48",
+      "unit": ""
+    },
+    {
+      "id": 137,
+      "category": "ratio",
+      "question": "A quantity of 132 is divided between A and B in the ratio 6:8. How much does A receive?",
+      "answer": "56.57",
+      "unit": ""
+    },
+    {
+      "id": 138,
+      "category": "ratio",
+      "question": "A quantity of 90 is divided between A and B in the ratio 3:9. How much does A receive?",
+      "answer": "22.5",
+      "unit": ""
+    },
+    {
+      "id": 139,
+      "category": "ratio",
+      "question": "A quantity of 90 is divided between A and B in the ratio 3:6. How much does A receive?",
+      "answer": "30",
+      "unit": ""
+    },
+    {
+      "id": 140,
+      "category": "ratio",
+      "question": "A quantity of 72 is divided between A and B in the ratio 3:8. How much does A receive?",
+      "answer": "19.64",
+      "unit": ""
+    },
+    {
+      "id": 141,
+      "category": "ratio",
+      "question": "A quantity of 120 is divided between A and B in the ratio 5:9. How much does A receive?",
+      "answer": "42.86",
+      "unit": ""
+    },
+    {
+      "id": 142,
+      "category": "ratio",
+      "question": "A quantity of 96 is divided between A and B in the ratio 4:9. How much does A receive?",
+      "answer": "29.54",
+      "unit": ""
+    },
+    {
+      "id": 143,
+      "category": "ratio",
+      "question": "A quantity of 84 is divided between A and B in the ratio 5:9. How much does A receive?",
+      "answer": "30",
+      "unit": ""
+    },
+    {
+      "id": 144,
+      "category": "ratio",
+      "question": "A quantity of 72 is divided between A and B in the ratio 5:4. How much does A receive?",
+      "answer": "40",
+      "unit": ""
+    },
+    {
+      "id": 145,
+      "category": "ratio",
+      "question": "A quantity of 96 is divided between A and B in the ratio 5:9. How much does A receive?",
+      "answer": "34.29",
+      "unit": ""
+    },
+    {
+      "id": 146,
+      "category": "ratio",
+      "question": "A quantity of 96 is divided between A and B in the ratio 3:8. How much does A receive?",
+      "answer": "26.18",
+      "unit": ""
+    },
+    {
+      "id": 147,
+      "category": "ratio",
+      "question": "A quantity of 96 is divided between A and B in the ratio 5:9. How much does A receive?",
+      "answer": "34.29",
+      "unit": ""
+    },
+    {
+      "id": 148,
+      "category": "ratio",
+      "question": "A quantity of 84 is divided between A and B in the ratio 4:5. How much does A receive?",
+      "answer": "37.33",
+      "unit": ""
+    },
+    {
+      "id": 149,
+      "category": "ratio",
+      "question": "A quantity of 132 is divided between A and B in the ratio 7:9. How much does A receive?",
+      "answer": "57.75",
+      "unit": ""
+    },
+    {
+      "id": 150,
+      "category": "ratio",
+      "question": "A quantity of 120 is divided between A and B in the ratio 2:3. How much does A receive?",
+      "answer": "48",
+      "unit": ""
+    }
+  ]
+}

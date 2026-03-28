@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>GSPI Mini Test</title>
+  <script>
+    window.APP_ASSET_VERSION = String(Date.now());
+    document.write('<link rel="stylesheet" href="styles.css?v=' + encodeURIComponent(window.APP_ASSET_VERSION) + '">');
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="title">GSPI Mini Test</div>
+        <div class="subtitle">30 questions · numeric input · random from bank</div>
+      </div>
+      <div class="topbar-right">
+        <button id="new-test-btn" class="ghost-btn">New Test</button>
+        <div class="timer-wrap">
+          <span class="timer-label">Time Left</span>
+          <span id="timer" class="timer">50:00</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="question-panel">
+        <div id="question-card" class="question-card">
+          <div id="question-number" class="question-number">Question 1:</div>
+          <p id="question-text" class="question-text"></p>
+
+          <div class="answer-row">
+            <label for="answer-input" class="answer-label">Answer</label>
+            <input id="answer-input" class="answer-input" type="text" inputmode="decimal" autocomplete="off" />
+            <span id="answer-unit" class="answer-unit"></span>
+          </div>
+
+          <div class="meta-row">
+            <button id="toggle-done-btn" class="check-toggle-btn" aria-label="Toggle checked"></button>
+            <span id="status-text" class="status-text">Unchecked</span>
+          </div>
+        </div>
+
+        <div id="result-screen" class="result-screen hidden">
+          <div class="result-panel large-result-panel">
+            <h3>Test Result</h3>
+            <p>Correct: <strong id="result-correct">0</strong> / <span id="result-total">30</span></p>
+            <p>Accuracy: <strong id="result-percent">0.0%</strong></p>
+            <p>Answered: <strong id="result-answered">0</strong> / <span class="result-total-2">30</span></p>
+            <p>Checked: <strong id="result-checked">0</strong> / <span class="result-total-3">30</span></p>
+            <p id="result-note" class="small"></p>
+          </div>
+        </div>
+      </section>
+
+      <aside class="sidebar">
+        <div class="sidebar-header">Question List</div>
+        <div id="question-nav" class="question-nav"></div>
+      </aside>
+    </main>
+
+    <footer class="footer-bar">
+      <button id="back-btn" class="nav-btn">Back</button>
+      <div class="footer-center"></div>
+      <button id="next-btn" class="nav-btn">Next</button>
+    </footer>
+  </div>
+
+  <script>
+    document.write('<script src="app.js?v=' + encodeURIComponent(window.APP_ASSET_VERSION) + '"><\/script>');
+  </script>
+</body>
+</html>
