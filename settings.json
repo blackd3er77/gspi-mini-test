@@ -1,0 +1,53 @@
+{
+  "bankFile": "questions_bank_schema_normalized_v2.json",
+  "testSize": 30,
+  "testMinutes": 50,
+  "allowedStatuses": [
+    "ready"
+  ],
+  "supportedTypes": [
+    "input_number",
+    "mcq_single",
+    "mcq_multi"
+  ],
+  "excludeQuestionIds": [
+    "ch2_q14"
+  ],
+  "selection": {
+    "typeTargets": {
+      "input_number": 0.8,
+      "mcq_single": 0.15,
+      "mcq_multi": 0.05
+    },
+    "chapterWeights": {
+      "default": 1,
+      "ch1_logic_true_false": 1.4,
+      "ch2_logic_order_ranking": 1.35,
+      "ch3_logic_breakdown_composition": 1.25,
+      "ch4_logic_integer": 1.2,
+      "ch5_logic_averages": 1.1,
+      "ch7_logic_percentages": 3.5,
+      "ch8_logic_positions": 0.9,
+      "ch9_arrangement_selection_ordering": 0.9,
+      "ch10_arrangement_selection_seating_coloring": 0.9,
+      "ch11_arrangement_selection_cards_coins_dice": 0.9,
+      "ch12_arrangement_selection_duplicates_circle_application": 0.9,
+      "ch13_probability_basics": 2.3,
+      "ch14_probability_applications": 2.2,
+      "ch15_ratio_percentage": 2.6,
+      "ch16_profit_loss": 2.1,
+      "ch17_discount_fare": 1.8,
+      "ch18_work_rate": 2.0,
+      "ch19_payment_settlement": 1.8,
+      "ch20_speed": 2.0,
+      "ch21_sets": 1.5,
+      "ch22_table_interpretation": 1.3,
+      "ch23_special_math": 1.0,
+      "ch24_information_reading": 0.7,
+      "ch25_flow_of_goods": 0.7,
+      "ch26_graph_regions": 0.7,
+      "ch27_conditions_regions": 0.7
+    }
+  },
+  "imageBasePath": "img"
+}
