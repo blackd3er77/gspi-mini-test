@@ -1,28 +1,46 @@
 const APP_ASSET_VERSION = window.APP_ASSET_VERSION || String(Date.now());
 
+const DEFAULT_SETTINGS = {
+  bankFile: 'questions_bank_schema_normalized_v2.json',
+  testSize: 30,
+  testMinutes: 50,
+  allowedStatuses: ['ready'],
+  supportedTypes: ['input_number', 'mcq_single', 'mcq_multi'],
+  excludeTypes: ['mcq_multi', 'mark_positions', 'unresolved'],
+  excludeQuestionIds: ['ch2_q14'],
+  imageBasePath: 'img',
+  renderOptions: {
+    numericMcqAsInput: true,
+    hideChoicesForNumericMcq: true,
+    allowFractionInput: true,
+  },
+  selection: {
+    typeTargets: {
+      input_number: 1.0,
+      mcq_single: 0,
+      mcq_multi: 0,
+    },
+    chapterWeights: { default: 1 },
+  },
+};
+
 const state = {
-  settings: null,
-  bank: [],
+  settings: structuredClone(DEFAULT_SETTINGS),
+  flatBank: [],
   questions: [],
   currentIndex: 0,
   answers: [],
   done: [],
-  secondsLeft: 0,
+  secondsLeft: DEFAULT_SETTINGS.testMinutes * 60,
   timerId: null,
   submitted: false,
-  reviewVisible: false,
+  resultDetails: [],
 };
 
 const questionCardEl = document.getElementById('question-card');
 const resultScreenEl = document.getElementById('result-screen');
-const subtitleEl = document.getElementById('subtitle');
-const questionMetaEl = document.getElementById('question-meta');
 const questionNumberEl = document.getElementById('question-number');
 const questionTextEl = document.getElementById('question-text');
-const questionMediaEl = document.getElementById('question-media');
-const questionTableWrapEl = document.getElementById('question-table-wrap');
-const choicesWrapEl = document.getElementById('choices-wrap');
-const answerRowEl = document.getElementById('answer-row');
 const answerInputEl = document.getElementById('answer-input');
 const answerUnitEl = document.getElementById('answer-unit');
 const questionNavEl = document.getElementById('question-nav');
@@ -34,180 +52,222 @@ const resultPercentEl = document.getElementById('result-percent');
 const resultAnsweredEl = document.getElementById('result-answered');
 const resultCheckedEl = document.getElementById('result-checked');
 const resultNoteEl = document.getElementById('result-note');
-const resultReviewEl = document.getElementById('result-review');
-const toggleReviewBtn = document.getElementById('toggle-review-btn');
 
 const backBtn = document.getElementById('back-btn');
 const nextBtn = document.getElementById('next-btn');
 const newTestBtn = document.getElementById('new-test-btn');
 const toggleDoneBtn = document.getElementById('toggle-done-btn');
 
+questionTextEl.style.whiteSpace = 'pre-wrap';
+
+// dynamic containers so index.html can stay unchanged
+const mediaWrapEl = document.createElement('div');
+mediaWrapEl.id = 'question-media-wrap';
+mediaWrapEl.className = 'question-media-wrap';
+questionTextEl.insertAdjacentElement('afterend', mediaWrapEl);
+
+const choicesWrapEl = document.createElement('div');
+choicesWrapEl.id = 'choices-wrap';
+choicesWrapEl.className = 'choices-wrap';
+mediaWrapEl.insertAdjacentElement('afterend', choicesWrapEl);
+
+const resultPanelEl = resultScreenEl.querySelector('.result-panel');
+
+const resultActionsEl = document.createElement('div');
+resultActionsEl.className = 'result-actions';
+resultActionsEl.innerHTML = '<button id="toggle-result-details-btn" class="ghost-btn" type="button">Show answer review</button>';
+resultPanelEl.appendChild(resultActionsEl);
+
+const resultDetailsEl = document.createElement('div');
+resultDetailsEl.id = 'result-details';
+resultDetailsEl.className = 'result-details hidden';
+resultPanelEl.appendChild(resultDetailsEl);
+
+const toggleResultDetailsBtn = document.getElementById('toggle-result-details-btn');
+
+injectExtraStyles();
+
 async function init() {
-  const settingsRes = await fetch(`settings.json?v=${encodeURIComponent(APP_ASSET_VERSION)}`, { cache: 'no-store' });
-  state.settings = await settingsRes.json();
+  try {
+    const settingsRes = await fetch(`settings.json?v=${encodeURIComponent(APP_ASSET_VERSION)}`, { cache: 'no-store' });
+    if (settingsRes.ok) {
+      const loaded = await settingsRes.json();
+      state.settings = deepMerge(structuredClone(DEFAULT_SETTINGS), loaded || {});
+    }
+  } catch (err) {
+    console.warn('settings.json not loaded, using defaults', err);
+  }
 
-  const bankFile = state.settings.bankFile || 'questions_bank_schema_normalized_v2.json';
-  const bankRes = await fetch(`${bankFile}?v=${encodeURIComponent(APP_ASSET_VERSION)}`, { cache: 'no-store' });
-  const bankData = await bankRes.json();
-  state.bank = flattenBank(bankData);
+  const subtitleEl = document.querySelector('.subtitle');
+  if (subtitleEl) {
+    subtitleEl.textContent = `${state.settings.testSize} questions · input focused · random from bank`;
+  }
+  if (timerEl) {
+    timerEl.textContent = formatTime(state.settings.testMinutes * 60);
+  }
 
-  const testSize = state.settings.testSize || 30;
-  const testMinutes = state.settings.testMinutes || 50;
-  subtitleEl.textContent = `${testSize} questions · mixed types · random from bank`;
-  timerEl.textContent = `${String(testMinutes).padStart(2, '0')}:00`;
-
+  const bankFile = state.settings.bankFile || DEFAULT_SETTINGS.bankFile;
+  const res = await fetch(`${bankFile}?v=${encodeURIComponent(APP_ASSET_VERSION)}`, { cache: 'no-store' });
+  const data = await res.json();
+  state.flatBank = flattenQuestionBank(data);
   startNewTest();
 }
 
-function flattenBank(payload) {
-  if (Array.isArray(payload.questions)) return payload.questions;
-  if (Array.isArray(payload.chapters)) {
-    return payload.chapters.flatMap((chapter) =>
-      (chapter.questions || []).map((q) => ({
-        ...q,
-        chapter_title: chapter.chapter_title || chapter.chapter_id || q.chapter_id,
-      }))
-    );
+function flattenQuestionBank(data) {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data.questions)) return data.questions;
+  if (Array.isArray(data.chapters)) {
+    return data.chapters.flatMap(ch => (ch.questions || []).map(q => ({ ...q, chapter_id: q.chapter_id || ch.chapter_id })));
   }
   return [];
 }
 
-function getTestSize() {
-  return Number(state.settings?.testSize || 30);
-}
-
-function getTestMinutes() {
-  return Number(state.settings?.testMinutes || 50);
-}
-
-function getImageBasePath() {
-  return String(state.settings?.imageBasePath || 'img').replace(/\/$/, '');
-}
-
 function startNewTest() {
-  clearInterval(state.timerId);
+  const available = getEligibleQuestions();
+  const testSize = state.settings.testSize;
 
-  const selected = buildTestFromSettings(state.bank, state.settings);
-  if (selected.length < getTestSize()) {
-    alert(`Question bank only produced ${selected.length} supported questions. Please review settings.json.`);
+  if (available.length < testSize) {
+    alert(`Eligible question bank only has ${available.length} questions. Need at least ${testSize}.`);
     return;
   }
 
-  state.questions = selected;
+  clearInterval(state.timerId);
+  state.questions = selectQuestions(available, testSize);
   state.currentIndex = 0;
-  state.answers = Array.from({ length: state.questions.length }, () => createEmptyAnswer());
-  state.done = Array.from({ length: state.questions.length }, () => false);
-  state.secondsLeft = getTestMinutes() * 60;
+  state.answers = Array(testSize).fill(null).map(() => '');
+  state.done = Array(testSize).fill(false);
+  state.secondsLeft = state.settings.testMinutes * 60;
   state.submitted = false;
-  state.reviewVisible = false;
+  state.resultDetails = [];
 
   questionCardEl.classList.remove('hidden');
   resultScreenEl.classList.add('hidden');
-  resultReviewEl.classList.add('hidden');
-  toggleReviewBtn.classList.add('hidden');
-  toggleReviewBtn.textContent = 'Hiện chi tiết câu đúng sai';
-  answerInputEl.disabled = false;
-  choicesWrapEl.innerHTML = '';
+  resultDetailsEl.classList.add('hidden');
+  toggleResultDetailsBtn.textContent = 'Show answer review';
+
   buildNav();
   renderQuestion();
   startTimer();
 }
 
-function buildTestFromSettings(bank, settings) {
-  const testSize = Number(settings?.testSize || 30);
-  const allowedStatuses = new Set(settings?.allowedStatuses || ['ready']);
-  const supportedTypes = new Set(settings?.supportedTypes || ['input_number', 'mcq_single', 'mcq_multi']);
-  const excludedIds = new Set(settings?.excludeQuestionIds || []);
+function getEligibleQuestions() {
+  const settings = state.settings;
+  const allowedStatuses = new Set(settings.allowedStatuses || ['ready']);
+  const supportedTypes = new Set(settings.supportedTypes || ['input_number', 'mcq_single', 'mcq_multi']);
+  const excludeTypes = new Set(settings.excludeTypes || []);
+  const excludeIds = new Set(settings.excludeQuestionIds || []);
 
-  const eligible = bank.filter((q) =>
-    allowedStatuses.has(q.status) &&
-    supportedTypes.has(q.type) &&
-    !excludedIds.has(q.id)
-  );
+  return state.flatBank
+    .filter(q => !excludeIds.has(q.id))
+    .filter(q => allowedStatuses.has(q.status || 'ready'))
+    .filter(q => supportedTypes.has(q.type))
+    .filter(q => !excludeTypes.has(q.type))
+    .filter(q => getEffectiveRenderMode(q) !== 'unsupported');
+}
 
-  const byType = {};
-  for (const q of eligible) {
-    (byType[q.type] ||= []).push(q);
+function selectQuestions(pool, testSize) {
+  const annotated = pool.map(q => ({
+    ...q,
+    _effectiveType: getSelectionType(q),
+    _chapterWeight: getChapterWeight(q.chapter_id),
+  }));
+
+  const typeTargets = state.settings.selection?.typeTargets || { input_number: 1 };
+  const availableByType = groupBy(annotated, q => q._effectiveType);
+  const desiredCounts = allocateTypeCounts(typeTargets, availableByType, testSize);
+
+  let selected = [];
+  for (const [type, count] of Object.entries(desiredCounts)) {
+    if (count <= 0) continue;
+    const chosen = weightedSampleWithoutReplacement(availableByType[type] || [], count, q => q._chapterWeight);
+    selected.push(...chosen);
   }
 
-  const typeTargets = settings?.selection?.typeTargets || { input_number: 1 };
-  const initialCounts = allocateTypeCounts(typeTargets, testSize, byType);
-  const selected = [];
-  const usedIds = new Set();
-
-  Object.entries(initialCounts).forEach(([type, count]) => {
-    const bucket = weightedShuffle((byType[type] || []), settings);
-    for (const q of bucket) {
-      if (selected.length >= testSize) break;
-      if (countForType(selected, type) >= count) break;
-      if (usedIds.has(q.id)) continue;
-      selected.push(q);
-      usedIds.add(q.id);
-    }
-  });
-
   if (selected.length < testSize) {
-    const remaining = weightedShuffle(eligible.filter((q) => !usedIds.has(q.id)), settings);
-    for (const q of remaining) {
-      if (selected.length >= testSize) break;
-      selected.push(q);
-      usedIds.add(q.id);
-    }
+    const selectedIds = new Set(selected.map(q => q.id));
+    const leftovers = annotated.filter(q => !selectedIds.has(q.id));
+    const filler = weightedSampleWithoutReplacement(leftovers, testSize - selected.length, q => q._chapterWeight);
+    selected.push(...filler);
   }
 
   return shuffle(selected).slice(0, testSize);
 }
 
-function allocateTypeCounts(typeTargets, testSize, byType) {
-  const entries = Object.entries(typeTargets).filter(([type]) => (byType[type] || []).length > 0);
-  const totalWeight = entries.reduce((sum, [, weight]) => sum + Number(weight || 0), 0) || 1;
-  const allocations = {};
-  let assigned = 0;
-  const remainders = [];
+function getSelectionType(q) {
+  const mode = getEffectiveRenderMode(q);
+  if (mode === 'input_number') return 'input_number';
+  return q.type;
+}
 
-  for (const [type, weight] of entries) {
-    const raw = (Number(weight || 0) / totalWeight) * testSize;
-    const capped = Math.min(Math.floor(raw), (byType[type] || []).length);
-    allocations[type] = capped;
-    assigned += capped;
-    remainders.push({ type, remainder: raw - Math.floor(raw) });
+function allocateTypeCounts(typeTargets, availableByType, total) {
+  const positiveTargets = Object.entries(typeTargets).filter(([, v]) => Number(v) > 0 && (availableByType?.[arguments[0]] || true));
+  const targetEntries = Object.entries(typeTargets).filter(([type, v]) => Number(v) > 0 && (availableByType[type] || []).length > 0);
+  if (!targetEntries.length) {
+    const fallbackType = Object.keys(availableByType).find(k => (availableByType[k] || []).length > 0);
+    return { [fallbackType]: total };
   }
 
-  remainders.sort((a, b) => b.remainder - a.remainder);
-  let idx = 0;
-  while (assigned < testSize && remainders.length > 0) {
-    const item = remainders[idx % remainders.length];
-    const available = (byType[item.type] || []).length;
-    if ((allocations[item.type] || 0) < available) {
-      allocations[item.type] += 1;
-      assigned += 1;
+  const sum = targetEntries.reduce((acc, [, v]) => acc + Number(v), 0);
+  const raw = targetEntries.map(([type, weight]) => ({ type, raw: (Number(weight) / sum) * total }));
+  const counts = Object.fromEntries(raw.map(({ type, raw }) => [type, Math.floor(raw)]));
+  let assigned = Object.values(counts).reduce((a, b) => a + b, 0);
+
+  raw.sort((a, b) => (b.raw - Math.floor(b.raw)) - (a.raw - Math.floor(a.raw)));
+  for (const entry of raw) {
+    if (assigned >= total) break;
+    counts[entry.type] += 1;
+    assigned += 1;
+  }
+
+  // cap by availability
+  let deficit = 0;
+  for (const type of Object.keys(counts)) {
+    const maxAvail = (availableByType[type] || []).length;
+    if (counts[type] > maxAvail) {
+      deficit += counts[type] - maxAvail;
+      counts[type] = maxAvail;
     }
-    idx += 1;
-    if (idx > 1000) break;
   }
 
-  return allocations;
+  // redistribute deficit
+  if (deficit > 0) {
+    for (const { type } of raw) {
+      if (deficit <= 0) break;
+      const avail = (availableByType[type] || []).length;
+      const room = avail - counts[type];
+      if (room <= 0) continue;
+      const add = Math.min(room, deficit);
+      counts[type] += add;
+      deficit -= add;
+    }
+  }
+
+  return counts;
 }
 
-function weightedShuffle(items, settings) {
-  return items
-    .map((item) => ({ item, score: Math.random() * getQuestionWeight(item, settings) }))
-    .sort((a, b) => b.score - a.score)
-    .map((entry) => entry.item);
+function weightedSampleWithoutReplacement(arr, count, weightFn) {
+  const pool = [...arr];
+  const out = [];
+  while (pool.length && out.length < count) {
+    const totalWeight = pool.reduce((acc, item) => acc + Math.max(0.0001, Number(weightFn(item)) || 1), 0);
+    let r = Math.random() * totalWeight;
+    let pickedIndex = 0;
+    for (let i = 0; i < pool.length; i += 1) {
+      r -= Math.max(0.0001, Number(weightFn(pool[i])) || 1);
+      if (r <= 0) {
+        pickedIndex = i;
+        break;
+      }
+    }
+    out.push(pool[pickedIndex]);
+    pool.splice(pickedIndex, 1);
+  }
+  return out;
 }
 
-function getQuestionWeight(q, settings) {
-  const chapterWeights = settings?.selection?.chapterWeights || {};
-  const chapterWeight = Number(chapterWeights[q.chapter_id] ?? chapterWeights.default ?? 1);
-  return Math.max(chapterWeight, 0.0001);
-}
-
-function countForType(selected, type) {
-  return selected.filter((q) => q.type === type).length;
-}
-
-function createEmptyAnswer() {
-  return { value: '', selected: [] };
+function getChapterWeight(chapterId) {
+  const map = state.settings.selection?.chapterWeights || { default: 1 };
+  return Number(map[chapterId] ?? map.default ?? 1) || 1;
 }
 
 function buildNav() {
@@ -248,116 +308,80 @@ function setCheckIcon(buttonEl, isDone) {
   buttonEl.textContent = isDone ? '✓' : '';
 }
 
-function isQuestionAnswered(index) {
-  const q = state.questions[index];
-  const a = state.answers[index];
-  if (!q || !a) return false;
-  if (q.type === 'input_number') return String(a.value || '').trim() !== '';
-  return Array.isArray(a.selected) && a.selected.length > 0;
-}
-
 function renderNav() {
   const rows = [...questionNavEl.children];
   rows.forEach((row, index) => {
     const numBtn = row.children[0];
     const checkBtn = row.children[1];
-
     numBtn.classList.toggle('current', index === state.currentIndex && !state.submitted);
-    numBtn.classList.toggle('answered', isQuestionAnswered(index));
+    numBtn.classList.toggle('answered', hasAnswerValue(state.answers[index]));
     setCheckIcon(checkBtn, state.done[index]);
   });
-
   setCheckIcon(toggleDoneBtn, state.done[state.currentIndex]);
 }
 
 function renderQuestion() {
   const q = state.questions[state.currentIndex];
-  const chapterLabel = q.chapter_title || q.chapter_id || '';
-  const partLabel = q.part != null ? ` · Part ${q.part}` : '';
-  questionMetaEl.textContent = `${chapterLabel} · ${q.type}${partLabel}`;
+  const mode = getEffectiveRenderMode(q);
   questionNumberEl.textContent = `Question ${state.currentIndex + 1}:`;
   questionTextEl.textContent = q.prompt || q.question || '';
-  renderDiagram(q);
-  renderTable(q);
-  renderAnswerArea(q);
+
+  renderMedia(q);
+  renderAnswerArea(q, mode);
   renderNav();
   renderStatus();
   backBtn.disabled = state.currentIndex === 0 || state.submitted;
   nextBtn.disabled = state.submitted;
   nextBtn.textContent = state.currentIndex === state.questions.length - 1 ? 'Finish' : 'Next';
-  if (!state.submitted && q.type === 'input_number') answerInputEl.focus();
+  if (!state.submitted && mode === 'input_number') answerInputEl.focus();
+}
+
+function renderMedia(q) {
+  mediaWrapEl.innerHTML = '';
+  const diagramSrc = resolveDiagramSrc(q.diagram);
+  if (diagramSrc) {
+    const img = document.createElement('img');
+    img.src = diagramSrc;
+    img.alt = q.id || 'question diagram';
+    img.className = 'question-image';
+    img.loading = 'lazy';
+    mediaWrapEl.appendChild(img);
+  }
+
+  if (q.table_data) {
+    mediaWrapEl.appendChild(renderTable(q.table_data));
+  }
+
+  mediaWrapEl.classList.toggle('hidden', mediaWrapEl.children.length === 0);
 }
 
 function resolveDiagramSrc(diagram) {
-  if (!diagram) return null;
-  const rawUrl = String(diagram.image_url || '').trim();
-  if (rawUrl && !rawUrl.startsWith('REPLACE_WITH_HOSTED_URL')) {
-    return rawUrl;
+  if (!diagram || diagram.type !== 'image') return null;
+  const url = diagram.image_url;
+  if (url && !String(url).startsWith('REPLACE_WITH_HOSTED_URL')) return url;
+  const ref = diagram.image_ref;
+  if (ref) {
+    const base = (state.settings.imageBasePath || 'img').replace(/\/$/, '');
+    return `${base}/${ref}`;
   }
-  const ref = String(diagram.image_ref || '').trim();
-  if (!ref) return null;
-  return `${getImageBasePath()}/${ref}`;
+  return null;
 }
 
-function renderDiagram(q) {
-  questionMediaEl.innerHTML = '';
-  questionMediaEl.classList.add('hidden');
-  const diagram = q.diagram;
-  if (!diagram) return;
-
-  const src = resolveDiagramSrc(diagram);
-  if (src) {
-    const img = document.createElement('img');
-    img.className = 'question-image';
-    img.src = src;
-    img.alt = `Diagram for ${q.id}`;
-    img.loading = 'lazy';
-    img.addEventListener('load', () => {
-      questionMediaEl.classList.remove('hidden');
-    });
-    img.addEventListener('error', () => {
-      questionMediaEl.innerHTML = '';
-      const note = document.createElement('div');
-      note.className = 'media-note';
-      const target = diagram.image_ref ? `${getImageBasePath()}/${diagram.image_ref}` : src;
-      note.textContent = `Image not found yet: ${target}`;
-      questionMediaEl.appendChild(note);
-      questionMediaEl.classList.remove('hidden');
-    });
-    questionMediaEl.appendChild(img);
-    questionMediaEl.classList.remove('hidden');
-    return;
-  }
-
-  const note = document.createElement('div');
-  note.className = 'media-note';
-  note.textContent = diagram.image_ref
-    ? `Image placeholder: add ${diagram.image_ref} into the ${getImageBasePath()}/ folder or set a real image_url.`
-    : 'Diagram exists for this question, but no image_ref or image_url has been added yet.';
-  questionMediaEl.appendChild(note);
-  questionMediaEl.classList.remove('hidden');
-}
-
-function renderTable(q) {
-  questionTableWrapEl.innerHTML = '';
-  questionTableWrapEl.classList.add('hidden');
-  const tableData = q.table_data;
-  if (!tableData) return;
-
-  const columns = Array.isArray(tableData.columns) ? tableData.columns : [];
-  const headers = Array.isArray(tableData.headers) ? tableData.headers : columns;
-  const rows = Array.isArray(tableData.rows) ? tableData.rows : [];
-  if (!headers.length && !rows.length) return;
-
+function renderTable(tableData) {
+  const tableWrap = document.createElement('div');
+  tableWrap.className = 'question-table-wrap';
   const table = document.createElement('table');
   table.className = 'question-table';
 
-  if (headers.length) {
+  const columns = Array.isArray(tableData.columns) ? tableData.columns : Array.isArray(tableData.headers) ? tableData.headers : null;
+  const rows = Array.isArray(tableData.rows) ? tableData.rows : [];
+
+  if (columns && columns.length) {
     const thead = document.createElement('thead');
     const tr = document.createElement('tr');
-    headers.forEach((header) => {
+    columns.forEach(col => {
       const th = document.createElement('th');
-      th.textContent = header ?? '';
+      th.textContent = String(col ?? '');
       tr.appendChild(th);
     });
     thead.appendChild(tr);
@@ -365,94 +389,94 @@ function renderTable(q) {
   }
 
   const tbody = document.createElement('tbody');
-  rows.forEach((row, rowIndex) => {
+  rows.forEach(row => {
     const tr = document.createElement('tr');
-    row.forEach((cell, cellIndex) => {
-      const isRowHeader = cellIndex === 0;
-      const cellEl = (rowIndex === 0 && !headers.length) ? document.createElement('th') : document.createElement(isRowHeader ? 'th' : 'td');
-      if (isRowHeader) cellEl.scope = 'row';
-      cellEl.textContent = cell ?? '';
-      tr.appendChild(cellEl);
+    (row || []).forEach(cell => {
+      const td = document.createElement('td');
+      td.textContent = String(cell ?? '');
+      tr.appendChild(td);
     });
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);
-  questionTableWrapEl.appendChild(table);
-  questionTableWrapEl.classList.remove('hidden');
+  tableWrap.appendChild(table);
+  return tableWrap;
 }
 
-function renderAnswerArea(q) {
+function renderAnswerArea(q, mode) {
   choicesWrapEl.innerHTML = '';
   choicesWrapEl.classList.add('hidden');
-  answerRowEl.classList.add('hidden');
 
-  const currentAnswer = state.answers[state.currentIndex];
-
-  if (q.type === 'input_number') {
-    answerRowEl.classList.remove('hidden');
-    answerInputEl.value = currentAnswer.value || '';
+  if (mode === 'input_number') {
+    const current = typeof state.answers[state.currentIndex] === 'string' ? state.answers[state.currentIndex] : '';
+    answerInputEl.value = current;
     answerInputEl.disabled = state.submitted;
-    answerUnitEl.textContent = q.unit || '';
-    answerInputEl.type = 'text';
-    answerInputEl.inputMode = 'decimal';
+    answerInputEl.parentElement.classList.remove('hidden');
+    answerUnitEl.textContent = q.unit || inferNumericUnit(q) || '';
     return;
   }
 
   answerInputEl.value = '';
-  answerUnitEl.textContent = '';
+  answerInputEl.disabled = true;
+  answerInputEl.parentElement.classList.add('hidden');
   choicesWrapEl.classList.remove('hidden');
 
-  const choiceEntries = Object.entries(q.choices || {});
-  const inputType = q.type === 'mcq_multi' ? 'checkbox' : 'radio';
+  if (mode === 'mcq_single') {
+    renderMcqSingle(q);
+  } else if (mode === 'mcq_multi') {
+    renderMcqMulti(q);
+  }
+}
 
-  choiceEntries.forEach(([key, text]) => {
-    const label = document.createElement('label');
-    label.className = 'choice-label';
-
-    const input = document.createElement('input');
-    input.type = inputType;
-    input.name = `choice-${state.currentIndex}`;
-    input.value = key;
-    input.disabled = state.submitted;
-    input.checked = (currentAnswer.selected || []).includes(key);
-    input.addEventListener('change', () => {
-      handleChoiceChange(q, key, input.checked);
+function renderMcqSingle(q) {
+  const selected = typeof state.answers[state.currentIndex] === 'string' ? state.answers[state.currentIndex] : '';
+  Object.entries(q.choices || {}).forEach(([key, label]) => {
+    const row = document.createElement('label');
+    row.className = 'choice-row';
+    const radio = document.createElement('input');
+    radio.type = 'radio';
+    radio.name = `q_${state.currentIndex}`;
+    radio.value = key;
+    radio.checked = selected === key;
+    radio.disabled = state.submitted;
+    radio.addEventListener('change', () => {
+      state.answers[state.currentIndex] = key;
+      renderNav();
+      renderStatus();
     });
-
-    const content = document.createElement('div');
-    content.innerHTML = `<span class="choice-key">${escapeHtml(key)}.</span>${escapeHtml(text)}`;
-
-    label.appendChild(input);
-    label.appendChild(content);
-    choicesWrapEl.appendChild(label);
+    const text = document.createElement('span');
+    text.innerHTML = `<strong>${escapeHtml(key)}.</strong> ${escapeHtml(label)}`;
+    row.append(radio, text);
+    choicesWrapEl.appendChild(row);
   });
 }
 
-function escapeHtml(text) {
-  return String(text)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-
-function handleChoiceChange(q, key, checked) {
-  const current = state.answers[state.currentIndex];
-  if (q.type === 'mcq_single') {
-    current.selected = checked ? [key] : [];
-  } else if (q.type === 'mcq_multi') {
-    const set = new Set(current.selected || []);
-    if (checked) set.add(key);
-    else set.delete(key);
-    current.selected = [...set].sort();
-  }
-  renderNav();
-  renderStatus();
+function renderMcqMulti(q) {
+  const selected = Array.isArray(state.answers[state.currentIndex]) ? state.answers[state.currentIndex] : [];
+  Object.entries(q.choices || {}).forEach(([key, label]) => {
+    const row = document.createElement('label');
+    row.className = 'choice-row';
+    const box = document.createElement('input');
+    box.type = 'checkbox';
+    box.value = key;
+    box.checked = selected.includes(key);
+    box.disabled = state.submitted;
+    box.addEventListener('change', () => {
+      const current = new Set(Array.isArray(state.answers[state.currentIndex]) ? state.answers[state.currentIndex] : []);
+      if (box.checked) current.add(key); else current.delete(key);
+      state.answers[state.currentIndex] = [...current].sort();
+      renderNav();
+      renderStatus();
+    });
+    const text = document.createElement('span');
+    text.innerHTML = `<strong>${escapeHtml(key)}.</strong> ${escapeHtml(label)}`;
+    row.append(box, text);
+    choicesWrapEl.appendChild(row);
+  });
 }
 
 function renderStatus() {
-  const hasAnswer = isQuestionAnswered(state.currentIndex);
+  const hasAnswer = hasAnswerValue(state.answers[state.currentIndex]);
   const isDone = state.done[state.currentIndex];
   if (isDone && hasAnswer) statusTextEl.textContent = 'Done';
   else if (isDone) statusTextEl.textContent = 'Checked';
@@ -462,9 +486,9 @@ function renderStatus() {
 
 function saveCurrentAnswer() {
   const q = state.questions[state.currentIndex];
-  if (!q) return;
-  if (q.type === 'input_number') {
-    state.answers[state.currentIndex].value = answerInputEl.value.trim();
+  const mode = getEffectiveRenderMode(q);
+  if (mode === 'input_number') {
+    state.answers[state.currentIndex] = answerInputEl.value.trim();
   }
   renderNav();
   renderStatus();
@@ -484,64 +508,154 @@ function startTimer() {
 }
 
 function updateTimer() {
-  const mins = Math.floor(Math.max(state.secondsLeft, 0) / 60);
-  const secs = Math.max(state.secondsLeft, 0) % 60;
-  timerEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  timerEl.textContent = formatTime(Math.max(state.secondsLeft, 0));
 }
 
 function normalizeNumber(input) {
   if (input == null) return null;
-  const cleaned = String(input).trim().replace(/,/g, '').replace(/%/g, '');
-  if (cleaned === '') return null;
-  const num = Number(cleaned);
-  return Number.isFinite(num) ? num : null;
-}
+  let s = String(input).trim();
+  if (s === '') return null;
+  s = s.replace(/\s+/g, '');
+  s = s.replace(/，/g, ',').replace(/％/g, '%');
 
-function arraysEqualAsSets(a, b) {
-  const sa = [...new Set(a)].sort();
-  const sb = [...new Set(b)].sort();
-  return sa.length === sb.length && sa.every((v, i) => v === sb[i]);
-}
-
-function checkQuestion(q, userAnswerObj) {
-  const method = q?.scoring?.method;
-  if (method === 'numeric_exact') {
-    const correctRaw = Array.isArray(q.answer) ? q.answer[0] : q.answer;
-    const u = normalizeNumber(userAnswerObj?.value);
-    const c = normalizeNumber(correctRaw);
-    const tolerance = Number(q?.scoring?.tolerance ?? 0.01);
-    const isCorrect = u != null && c != null && Math.abs(u - c) <= tolerance;
-    return {
-      isCorrect,
-      userDisplay: userAnswerObj?.value?.trim() || '(blank)',
-      correctDisplay: formatCorrectAnswer(q),
-    };
+  if (state.settings.renderOptions?.allowFractionInput && /^-?\d+(?:\.\d+)?\/-?\d+(?:\.\d+)?$/.test(s)) {
+    const [a, b] = s.split('/');
+    const num = Number(a);
+    const den = Number(b);
+    if (Number.isFinite(num) && Number.isFinite(den) && den !== 0) return num / den;
   }
 
-  if (method === 'exact_choice_set') {
-    const userSelected = userAnswerObj?.selected || [];
-    const correctSelected = q?.scoring?.answers || q.answer || [];
-    return {
-      isCorrect: arraysEqualAsSets(userSelected, correctSelected),
-      userDisplay: userSelected.length ? userSelected.join(', ') : '(blank)',
-      correctDisplay: formatCorrectAnswer(q),
-    };
+  let sign = 1;
+  if (s.startsWith('-')) {
+    sign = -1;
+    s = s.slice(1);
   }
 
-  return {
-    isCorrect: false,
-    userDisplay: '(unsupported)',
-    correctDisplay: formatCorrectAnswer(q),
-  };
+  let percent = false;
+  if (s.endsWith('%')) {
+    percent = true;
+    s = s.slice(0, -1);
+  }
+
+  s = s.replace(/,/g, '');
+  s = s.replace(/(?:yen|円|km\/h|kmh|km²|km2|km|m\/s|m²|m2|m|g|kg|people|person|人|冊|匹|台|個|点|歳|rooms?|%)+$/i, '');
+  s = s.replace(/[^0-9.]/g, '');
+  if (s === '') return null;
+  const num = Number(s) * sign;
+  if (!Number.isFinite(num)) return null;
+  return percent ? num : num;
 }
 
-function formatCorrectAnswer(q) {
-  if (q.type === 'input_number') {
-    const raw = Array.isArray(q.answer) ? q.answer[0] : q.answer;
-    return `${raw}${q.unit ? ` ${q.unit}` : ''}`.trim();
+function isStrictNumericAnswerText(value) {
+  if (value == null) return false;
+
+  const raw = String(value).trim();
+  if (!raw) return false;
+
+  const lower = raw.toLowerCase();
+
+  // Loại các đáp án có wording logic / diễn đạt bằng câu
+  const bannedWords = [
+    'increase',
+    'decrease',
+    'either',
+    'must',
+    'true',
+    'false',
+    'before',
+    'after',
+    'than',
+    'at least',
+    'at most',
+    'more than',
+    'less than'
+  ];
+
+  if (bannedWords.some(word => lower.includes(word))) {
+    return false;
   }
-  const answers = q?.scoring?.answers || q.answer || [];
-  return Array.isArray(answers) ? answers.join(', ') : String(answers);
+
+  // Loại các đáp án mang tính mô tả/suy luận
+  if (/[a-z]{2,}/i.test(raw.replace(/^(?:-?\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?\s*)/, ''))) {
+    const allowedUnitOnly = raw.match(/^[-]?\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?\s*(%|yen|円|km\/h|km²|km2|km|m\/s|m²|m2|m|g|kg|rooms?|people|person|人|冊|匹|台|個|点|歳)?$/i);
+    if (!allowedUnitOnly) return false;
+  }
+
+  // Chỉ cho phép:
+  // số
+  // số thập phân
+  // phân số
+  // số + 1 unit đơn giản
+  return /^-?\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?\s*(%|yen|円|km\/h|km²|km2|km|m\/s|m²|m2|m|g|kg|rooms?|people|person|人|冊|匹|台|個|点|歳)?$/i.test(raw);
+}
+
+function isNumericLike(value) {
+  return isStrictNumericAnswerText(value);
+}
+
+function isNumericMcqQuestion(q) {
+  if (!q || q.type !== 'mcq_single') return false;
+  if (!q.choices || !q.answer || q.answer.length !== 1) return false;
+
+  const choiceValues = Object.values(q.choices);
+  if (choiceValues.length === 0) return false;
+
+  return choiceValues.every(v => isStrictNumericAnswerText(v));
+}
+
+function hasStrictNumericCorrectAnswer(q) {
+  if (!q || q.type !== 'mcq_single') return false;
+  if (!q.answer || q.answer.length !== 1) return false;
+  const correctKey = q.answer[0];
+  const correctValue = q.choices?.[correctKey];
+  return isStrictNumericAnswerText(correctValue);
+}
+
+
+function inferNumericUnit(q) {
+  if (q.unit) return q.unit;
+  if (isNumericMcqQuestion(q)) {
+    const correct = q.choices[q.answer[0]];
+    const m = String(correct).trim().match(/(%|yen|円|km\/h|km²|km2|km|m\/s|m²|m2|m|g|kg|people|person|人|冊|匹|台|個|点|歳)$/i);
+    return m ? m[1] : '';
+  }
+  return '';
+}
+
+function getEffectiveRenderMode(q) {
+  if (q.type === 'input_number') return 'input_number';
+
+  if (
+    q.type === 'mcq_single' &&
+    state.settings.renderOptions?.numericMcqAsInput &&
+    isNumericMcqQuestion(q) &&
+    hasStrictNumericCorrectAnswer(q)
+  ) {
+    return 'input_number';
+  }
+
+  if (q.type === 'mcq_single' || q.type === 'mcq_multi') return q.type;
+  return 'unsupported';
+}
+
+function getScoringMode(q) {
+  const renderMode = getEffectiveRenderMode(q);
+  if (renderMode === 'input_number') return 'numeric';
+  if (renderMode === 'mcq_single') return 'single';
+  if (renderMode === 'mcq_multi') return 'multi';
+  return 'unsupported';
+}
+
+function getCorrectNumericAnswer(q) {
+  if (q.type === 'input_number') return q.answer;
+  if (q.type === 'mcq_single' && isNumericMcqQuestion(q)) {
+    return q.choices[q.answer[0]];
+  }
+  return null;
+}
+
+function getTolerance(q) {
+  return Number(q?.scoring?.tolerance ?? 0.01) || 0.01;
 }
 
 function submitTest(auto = false) {
@@ -551,76 +665,176 @@ function submitTest(auto = false) {
   answerInputEl.disabled = true;
 
   let correct = 0;
-  const details = state.questions.map((q, i) => {
-    const result = checkQuestion(q, state.answers[i]);
-    if (result.isCorrect) correct += 1;
-    return result;
+  state.resultDetails = state.questions.map((q, i) => {
+    const mode = getScoringMode(q);
+    const user = state.answers[i];
+    const detail = {
+      index: i,
+      id: q.id,
+      chapterId: q.chapter_id || '',
+      sourceQuestion: q.source_question ?? '',
+      prompt: q.prompt || q.question || '',
+      userDisplay: formatUserAnswerDisplay(q, user),
+      correctDisplay: formatCorrectAnswerDisplay(q),
+      correct: false,
+    };
+
+    if (mode === 'numeric') {
+      const u = normalizeNumber(user);
+      const c = normalizeNumber(getCorrectNumericAnswer(q));
+      detail.correct = u != null && c != null && Math.abs(u - c) <= getTolerance(q);
+    } else if (mode === 'single') {
+      detail.correct = String(user || '') === String(q.answer?.[0] || '');
+    } else if (mode === 'multi') {
+      const userSet = [...(Array.isArray(user) ? user : [])].sort().join('|');
+      const answerSet = [...(q.answer || [])].sort().join('|');
+      detail.correct = userSet === answerSet;
+    }
+
+    if (detail.correct) correct += 1;
+    return detail;
   });
 
   const percent = ((correct / state.questions.length) * 100).toFixed(1);
-  const answered = state.questions.filter((_, i) => isQuestionAnswered(i)).length;
+  const answered = state.answers.filter(v => hasAnswerValue(v)).length;
   const checked = state.done.filter(Boolean).length;
 
   resultCorrectEl.textContent = String(correct);
   resultTotalEl.textContent = String(state.questions.length);
-  document.querySelector('.result-total-2').textContent = String(state.questions.length);
-  document.querySelector('.result-total-3').textContent = String(state.questions.length);
+  const total2 = document.querySelector('.result-total-2');
+  const total3 = document.querySelector('.result-total-3');
+  if (total2) total2.textContent = String(state.questions.length);
+  if (total3) total3.textContent = String(state.questions.length);
   resultPercentEl.textContent = `${percent}%`;
   resultAnsweredEl.textContent = String(answered);
   resultCheckedEl.textContent = String(checked);
   resultNoteEl.textContent = auto
     ? 'Time is up. Result was submitted automatically.'
-    : 'You can expand the review section to check each correct / incorrect answer in detail.';
-
-  renderReview(details);
-  toggleReviewBtn.classList.remove('hidden');
+    : 'Test completed. Numeric answers support decimal or fraction input. Example: 3/4 and 0.75 are treated as the same.';
 
   questionCardEl.classList.add('hidden');
   resultScreenEl.classList.remove('hidden');
+  renderResultDetails();
   renderNav();
   backBtn.disabled = true;
   nextBtn.disabled = true;
   nextBtn.textContent = 'Next';
 }
 
-function renderReview(details) {
-  resultReviewEl.innerHTML = '';
-  state.questions.forEach((q, index) => {
-    const detail = details[index];
-    const item = document.createElement('div');
-    item.className = `review-item ${detail.isCorrect ? 'ok' : 'bad'}`;
-
-    const head = document.createElement('div');
-    head.className = 'review-head';
-    head.textContent = `${detail.isCorrect ? '✅' : '❌'} Q${index + 1} · ${q.id}`;
-
-    const prompt = document.createElement('div');
-    prompt.className = 'review-prompt';
-    prompt.textContent = q.prompt || q.question || '';
-
-    const yourAnswer = document.createElement('div');
-    yourAnswer.className = 'review-line';
-    yourAnswer.innerHTML = `<span class="review-label">Your answer:</span> ${escapeHtml(detail.userDisplay)}`;
-
-    const correctAnswer = document.createElement('div');
-    correctAnswer.className = 'review-line';
-    correctAnswer.innerHTML = `<span class="review-label">Correct answer:</span> ${escapeHtml(detail.correctDisplay)}`;
-
-    item.appendChild(head);
-    item.appendChild(prompt);
-    item.appendChild(yourAnswer);
-    item.appendChild(correctAnswer);
-    resultReviewEl.appendChild(item);
+function renderResultDetails() {
+  resultDetailsEl.innerHTML = '';
+  state.resultDetails.forEach(item => {
+    const card = document.createElement('div');
+    card.className = `review-card ${item.correct ? 'ok' : 'bad'}`;
+    card.innerHTML = `
+      <div class="review-head">${item.correct ? '✅' : '❌'} Question ${item.index + 1}</div>
+      <div class="review-line"><strong>Source:</strong> ${escapeHtml(item.chapterId || '(unknown)')} · Question ${escapeHtml(String(item.sourceQuestion || '?'))}</div>
+      <div class="review-prompt">${escapeHtml(item.prompt).replace(/\n/g, '<br>')}</div>
+      <div class="review-line"><strong>Your answer:</strong> ${escapeHtml(item.userDisplay)}</div>
+      <div class="review-line"><strong>Correct answer:</strong> ${escapeHtml(item.correctDisplay)}</div>
+    `;
+    resultDetailsEl.appendChild(card);
   });
 }
 
-function shuffle(arr) {
-  const copy = [...arr];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+function formatUserAnswerDisplay(q, user) {
+  if (!hasAnswerValue(user)) return '(blank)';
+  const mode = getScoringMode(q);
+  if (mode === 'numeric') return String(user);
+  if (mode === 'single') {
+    const choiceText = q.choices?.[user];
+    return choiceText ? `${user}. ${choiceText}` : String(user);
   }
-  return copy;
+  if (mode === 'multi') {
+    return (Array.isArray(user) ? user : []).map(k => q.choices?.[k] ? `${k}. ${q.choices[k]}` : k).join(' | ');
+  }
+  return String(user);
+}
+
+function formatCorrectAnswerDisplay(q) {
+  const mode = getScoringMode(q);
+  if (mode === 'numeric') return String(getCorrectNumericAnswer(q));
+  if (mode === 'single') {
+    const key = q.answer?.[0];
+    return q.choices?.[key] ? `${key}. ${q.choices[key]}` : String(key || '');
+  }
+  if (mode === 'multi') {
+    return (q.answer || []).map(k => q.choices?.[k] ? `${k}. ${q.choices[k]}` : k).join(' | ');
+  }
+  return '';
+}
+
+function hasAnswerValue(value) {
+  if (Array.isArray(value)) return value.length > 0;
+  return String(value ?? '').trim() !== '';
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function groupBy(arr, keyFn) {
+  return arr.reduce((acc, item) => {
+    const key = keyFn(item);
+    (acc[key] ||= []).push(item);
+    return acc;
+  }, {});
+}
+
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function deepMerge(target, source) {
+  for (const key of Object.keys(source || {})) {
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      target[key] = deepMerge(target[key] ? { ...target[key] } : {}, source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+function injectExtraStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    .hidden { display: none !important; }
+    .question-media-wrap { margin: 12px 0; display: grid; gap: 10px; }
+    .question-image { max-width: min(760px, 100%); border: 1px solid #666; background: #fff; display: block; }
+    .question-table-wrap { overflow-x: auto; max-width: min(860px, 100%); }
+    .question-table { border-collapse: collapse; background: #fff; font-size: 13px; min-width: 360px; }
+    .question-table th, .question-table td { border: 1px solid #666; padding: 6px 8px; vertical-align: top; }
+    .question-table th { background: #efefef; font-weight: 700; }
+    .question-table tbody tr:nth-child(even) td { background: #fafafa; }
+    .choices-wrap { display: grid; gap: 8px; margin-top: 8px; max-width: 760px; }
+    .choice-row { display: flex; align-items: flex-start; gap: 8px; font-size: 15px; line-height: 1.4; }
+    .choice-row input { margin-top: 3px; }
+    .result-actions { margin-top: 12px; }
+    .result-details { display: grid; gap: 10px; margin-top: 12px; max-width: 860px; }
+    .review-card { background: #fff; border: 1px solid #444; padding: 10px 12px; }
+    .review-card.ok { border-left: 6px solid #2f8f46; }
+    .review-card.bad { border-left: 6px solid #c93d3d; }
+    .review-head { font-weight: 700; margin-bottom: 8px; }
+    .review-prompt { margin-bottom: 8px; line-height: 1.45; white-space: normal; }
+    .review-line { margin-bottom: 4px; }
+  `;
+  document.head.appendChild(style);
 }
 
 backBtn.addEventListener('click', () => {
@@ -638,13 +852,12 @@ nextBtn.addEventListener('click', () => {
     renderQuestion();
     return;
   }
-
   const ok = confirm('Finish this test and see the result?');
   if (ok) submitTest(false);
 });
 
 newTestBtn.addEventListener('click', () => {
-  const ok = confirm('Start a new random test? Current answers will be cleared.');
+  const ok = confirm(`Start a new random ${state.settings.testSize}-question test? Current answers will be cleared.`);
   if (ok) startNewTest();
 });
 
@@ -656,29 +869,17 @@ toggleDoneBtn.addEventListener('click', () => {
 });
 
 answerInputEl.addEventListener('input', () => {
-  if (!state.questions[state.currentIndex] || state.questions[state.currentIndex].type !== 'input_number') return;
-  state.answers[state.currentIndex].value = answerInputEl.value.trim();
+  state.answers[state.currentIndex] = answerInputEl.value.trim();
   renderNav();
   renderStatus();
 });
 
-toggleReviewBtn.addEventListener('click', () => {
-  state.reviewVisible = !state.reviewVisible;
-  resultReviewEl.classList.toggle('hidden', !state.reviewVisible);
-  toggleReviewBtn.textContent = state.reviewVisible
-    ? 'Ẩn chi tiết câu đúng sai'
-    : 'Hiện chi tiết câu đúng sai';
+toggleResultDetailsBtn.addEventListener('click', () => {
+  const isHidden = resultDetailsEl.classList.toggle('hidden');
+  toggleResultDetailsBtn.textContent = isHidden ? 'Show answer review' : 'Hide answer review';
 });
 
-window.addEventListener('beforeunload', (e) => {
-  const hasProgress = state.answers.some((a, idx) => isQuestionAnswered(idx));
-  if (!state.submitted && hasProgress) {
-    e.preventDefault();
-    e.returnValue = '';
-  }
-});
-
-init().catch((err) => {
+init().catch(err => {
   console.error(err);
-  alert('Failed to load settings or question bank.');
+  alert('Failed to load app files. Please check settings.json and question bank path.');
 });

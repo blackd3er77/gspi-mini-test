@@ -17,7 +17,7 @@
     <header class="topbar">
       <div>
         <div class="title">GSPI Mini Test</div>
-        <div id="subtitle" class="subtitle">30 questions · mixed types · random from bank</div>
+        <div class="subtitle">30 questions · numeric input · random from bank</div>
       </div>
       <div class="topbar-right">
         <button id="new-test-btn" class="ghost-btn">New Test</button>
@@ -31,14 +31,10 @@
     <main class="layout">
       <section class="question-panel">
         <div id="question-card" class="question-card">
-          <div id="question-meta" class="question-meta"></div>
           <div id="question-number" class="question-number">Question 1:</div>
           <p id="question-text" class="question-text"></p>
-          <div id="question-media" class="question-media hidden"></div>
-          <div id="question-table-wrap" class="question-table-wrap hidden"></div>
-          <div id="choices-wrap" class="choices-wrap hidden"></div>
 
-          <div id="answer-row" class="answer-row">
+          <div class="answer-row">
             <label for="answer-input" class="answer-label">Answer</label>
             <input id="answer-input" class="answer-input" type="text" inputmode="decimal" autocomplete="off" />
             <span id="answer-unit" class="answer-unit"></span>
@@ -58,10 +54,6 @@
             <p>Answered: <strong id="result-answered">0</strong> / <span class="result-total-2">30</span></p>
             <p>Checked: <strong id="result-checked">0</strong> / <span class="result-total-3">30</span></p>
             <p id="result-note" class="small"></p>
-            <div class="result-actions">
-              <button id="toggle-review-btn" class="ghost-btn hidden">Hiện chi tiết câu đúng sai</button>
-            </div>
-            <div id="result-review" class="result-review hidden"></div>
           </div>
         </div>
       </section>
