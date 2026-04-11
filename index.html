@@ -20,6 +20,7 @@
         <div class="subtitle">30 questions · numeric input · random from bank</div>
       </div>
       <div class="topbar-right">
+        <button id="option-btn" class="ghost-btn">Option</button>
         <button id="new-test-btn" class="ghost-btn">New Test</button>
         <div class="timer-wrap">
           <span class="timer-label">Time Left</span>
@@ -69,6 +70,28 @@
       <div class="footer-center"></div>
       <button id="next-btn" class="nav-btn">Next</button>
     </footer>
+  </div>
+
+  <div id="option-modal" class="option-modal hidden">
+    <div class="option-dialog">
+      <div class="option-title">Test Options</div>
+
+      <label class="option-field">
+        <span>Number of questions</span>
+        <input id="option-test-size" type="number" min="1" max="200" step="1" />
+      </label>
+
+      <label class="option-field">
+        <span>Test time (minutes)</span>
+        <input id="option-test-minutes" type="number" min="1" max="300" step="1" />
+      </label>
+
+      <div class="option-actions">
+        <button id="option-cancel-btn" class="ghost-btn" type="button">Cancel</button>
+        <button id="option-reset-btn" class="ghost-btn" type="button">Reset Default</button>
+        <button id="option-save-btn" class="ghost-btn" type="button">Save</button>
+      </div>
+    </div>
   </div>
 
   <script>

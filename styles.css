@@ -199,3 +199,49 @@ button:disabled { opacity: 0.5; cursor: default; }
   .sidebar { order: 2; }
   .question-nav { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
+
+.option-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.option-dialog {
+  width: min(360px, calc(100vw - 32px));
+  background: #f7f7f7;
+  border: 2px solid var(--line);
+  padding: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.option-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.option-field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.option-field input {
+  height: 34px;
+  border: 2px solid var(--line);
+  background: #fff;
+  padding: 4px 8px;
+  font-size: 15px;
+}
+
+.option-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
