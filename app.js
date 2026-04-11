@@ -56,7 +56,15 @@ const resultNoteEl = document.getElementById('result-note');
 const backBtn = document.getElementById('back-btn');
 const nextBtn = document.getElementById('next-btn');
 const newTestBtn = document.getElementById('new-test-btn');
+const optionBtn = document.getElementById('option-btn');
 const toggleDoneBtn = document.getElementById('toggle-done-btn');
+
+const optionModalEl = document.getElementById('option-modal');
+const optionTestSizeEl = document.getElementById('option-test-size');
+const optionTestMinutesEl = document.getElementById('option-test-minutes');
+const optionSaveBtn = document.getElementById('option-save-btn');
+const optionCancelBtn = document.getElementById('option-cancel-btn');
+const optionResetBtn = document.getElementById('option-reset-btn');
 
 questionTextEl.style.whiteSpace = 'pre-wrap';
 
@@ -87,6 +95,56 @@ const toggleResultDetailsBtn = document.getElementById('toggle-result-details-bt
 
 injectExtraStyles();
 
+function updateSubtitle() {
+  const subtitleEl = document.querySelector('.subtitle');
+  if (subtitleEl) {
+    subtitleEl.textContent = `${state.settings.testSize} questions · input focused · random from bank`;
+  }
+}
+
+function openOptionModal() {
+  optionTestSizeEl.value = state.settings.testSize;
+  optionTestMinutesEl.value = state.settings.testMinutes;
+  optionModalEl.classList.remove('hidden');
+}
+
+function closeOptionModal() {
+  optionModalEl.classList.add('hidden');
+}
+
+function applyOptionSettings() {
+  const nextSize = Number(optionTestSizeEl.value);
+  const nextMinutes = Number(optionTestMinutesEl.value);
+
+  if (!Number.isInteger(nextSize) || nextSize <= 0) {
+    alert('Please enter a valid number of questions.');
+    return;
+  }
+
+  if (!Number.isInteger(nextMinutes) || nextMinutes <= 0) {
+    alert('Please enter a valid test time.');
+    return;
+  }
+
+  state.settings.testSize = nextSize;
+  state.settings.testMinutes = nextMinutes;
+
+  updateSubtitle();
+  timerEl.textContent = formatTime(state.settings.testMinutes * 60);
+  closeOptionModal();
+}
+
+function resetOptionSettingsToDefault() {
+  state.settings.testSize = DEFAULT_SETTINGS.testSize;
+  state.settings.testMinutes = DEFAULT_SETTINGS.testMinutes;
+
+  optionTestSizeEl.value = state.settings.testSize;
+  optionTestMinutesEl.value = state.settings.testMinutes;
+
+  updateSubtitle();
+  timerEl.textContent = formatTime(state.settings.testMinutes * 60);
+}
+
 async function init() {
   try {
     const settingsRes = await fetch(`settings.json?v=${encodeURIComponent(APP_ASSET_VERSION)}`, { cache: 'no-store' });
@@ -98,10 +156,7 @@ async function init() {
     console.warn('settings.json not loaded, using defaults', err);
   }
 
-  const subtitleEl = document.querySelector('.subtitle');
-  if (subtitleEl) {
-    subtitleEl.textContent = `${state.settings.testSize} questions · input focused · random from bank`;
-  }
+  updateSubtitle();
   if (timerEl) {
     timerEl.textContent = formatTime(state.settings.testMinutes * 60);
   }
@@ -859,6 +914,28 @@ nextBtn.addEventListener('click', () => {
 newTestBtn.addEventListener('click', () => {
   const ok = confirm(`Start a new random ${state.settings.testSize}-question test? Current answers will be cleared.`);
   if (ok) startNewTest();
+});
+
+optionBtn.addEventListener('click', () => {
+  openOptionModal();
+});
+
+optionCancelBtn.addEventListener('click', () => {
+  closeOptionModal();
+});
+
+optionSaveBtn.addEventListener('click', () => {
+  applyOptionSettings();
+});
+
+optionResetBtn.addEventListener('click', () => {
+  resetOptionSettingsToDefault();
+});
+
+optionModalEl.addEventListener('click', (e) => {
+  if (e.target === optionModalEl) {
+    closeOptionModal();
+  }
 });
 
 toggleDoneBtn.addEventListener('click', () => {
